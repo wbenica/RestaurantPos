@@ -1,4 +1,4 @@
-package SKU;
+package skus;
 
 public class Id {
 

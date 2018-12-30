@@ -1,4 +1,4 @@
-package SKU;
+package skus;
 
 public enum Category {
     Lunch, Dinner, Appetizer, Salad, Soup, Entree, Sandwich, Dessert,

@@ -1,8 +1,6 @@
-package SKU;
+package skus;
 
-import Employees.Server;
-
-import java.util.ArrayList;
+import employees.Server;
 
 public class Ticket {
 

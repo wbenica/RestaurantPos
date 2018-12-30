@@ -1,4 +1,4 @@
-package Employees;
+package employees;
 
 public class Employee {
 
