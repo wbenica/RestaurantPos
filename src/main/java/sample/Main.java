@@ -10,7 +10,7 @@ import java.sql.*;
 
 public class Main extends Application {
 
-    private static String DATA_URL = "jdbc:sqlite:./data.db";
+    private static final String DATA_URL = "jdbc:sqlite:./data.db";
 
     public static void createNewDatabase ( ) {
 
@@ -59,7 +59,7 @@ public class Main extends Application {
                 + " FOREIGN KEY (server) REFERENCES employees(id)"
                 + ");";
 
-        String ticket_items = "CREATE TABLE IF NOT EXISTS ticket_items (\n"
+        String ticketItems = "CREATE TABLE IF NOT EXISTS ticket_items (\n"
                + " ticket_id integer,\n"
                 + " item_id integer,\n"
                 + " FOREIGN KEY(ticket_id) REFERENCES tickets(id),\n"
@@ -71,7 +71,7 @@ public class Main extends Application {
             stmt.execute ( items );
             stmt.execute ( employees );
             stmt.execute ( tickets );
-            stmt.execute ( ticket_items );
+            stmt.execute ( ticketItems );
         } catch ( SQLException e ) {
             System.out.println ( e.getMessage () );
         }

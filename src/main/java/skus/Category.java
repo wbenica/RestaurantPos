@@ -1,6 +1,6 @@
 package skus;
 
 public enum Category {
-    Lunch, Dinner, Appetizer, Salad, Soup, Entree, Sandwich, Dessert,
-    NA_Beverage, Beer, Wine, Liquor, Addon;
+    LUNCH, DINNER, APPETIZER, SALAD, SOUP, ENTREE, SANDWICH, DESSERT,
+    NA_BEVERAGE, BEER, WINE, LIQUOR, ADDON;
 }
