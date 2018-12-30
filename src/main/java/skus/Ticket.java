@@ -10,7 +10,6 @@ public class Ticket {
     int    ticketNum;
     Server server;
 
-
     public static int getCurrentTicket ( ) {
 
         return currentTicket;
@@ -18,11 +17,13 @@ public class Ticket {
 
     private static int getNextTicket ( ) {
 
-        return currentTicket += 1;
+        currentTicket += 1;
+        return currentTicket;
     }
 
     private class Table {
+
         Character section;
-        int tableNum;
+        int       tableNum;
     }
 }
