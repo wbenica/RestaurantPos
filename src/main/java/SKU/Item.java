@@ -2,12 +2,12 @@ package SKU;
 
 public class Item {
 
-    private int id;
+    private int      id;
     private Category category;
-    private String name;
-    private String button_name;
-    private double price;
-    private Item[] addons;
+    private String   name;
+    private String   button_name;
+    private double   price;
+    private Item[]   addons;
 
     public int getId ( ) {
 
@@ -20,7 +20,6 @@ public class Item {
                   String button_name,
                   double price,
                   Item[] addons ) {
-
 
         this.id = id;
         this.category = category;
