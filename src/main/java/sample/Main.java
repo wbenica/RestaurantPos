@@ -1,89 +1,52 @@
 package sample;
 
+import data.Database;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import java.sql.*;
 
 public class Main extends Application {
 
-    private static final String DATA_URL = "jdbc:sqlite:./data.db";
-
-    public static void createNewDatabase ( ) {
-
-        try ( Connection conn = DriverManager.getConnection ( DATA_URL ) ) {
-            if ( conn != null ) {
-                DatabaseMetaData meta = conn.getMetaData ( );
-                System.out.println (
-                        "The driver name is " + meta.getDriverName ( ) );
-                System.out.println ( "A new database has been created." );
-            }
-        }
-        catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
-        }
-    }
+    private static final String FORM_LABEL = "form_label";
 
     public static void main ( String[] args ) {
-        //launch(args);
 
-        createNewDatabase ( );
-        createTables ( );
-    }
-
-    private static void createTables () {
-
-        String items = "CREATE TABLE IF NOT EXISTS items (\n"
-                + " id integer PRIMARY KEY,\n"
-                + " name text NOT NULL, \n"
-                + " buttonName text NOT NULL,\n"
-                + " price real NOT NULL"
-                + ");";
-
-        String employees = "CREATE TABLE IF NOT EXISTS employees (\n"
-                + " id integer PRIMARY KEY,\n"
-                + " first_name text NOT NULL, \n"
-                + " last_name text NOT NULL,\n"
-                + " position text NOT NULL"
-                + ");";
-
-        String tickets = "CREATE TABLE IF NOT EXISTS tickets (\n"
-                + " id integer PRIMARY KEY,\n"
-                + " server integer NOT NULL, \n"
-                + " date integer NOT NULL,\n"
-                + " open_time integer NOT NULL,\n"
-                + " close_time integer NOT NULL,\n"
-                + " FOREIGN KEY (server) REFERENCES employees(id)"
-                + ");";
-
-        String ticketItems = "CREATE TABLE IF NOT EXISTS ticket_items (\n"
-               + " ticket_id integer,\n"
-                + " item_id integer,\n"
-                + " FOREIGN KEY(ticket_id) REFERENCES tickets(id),\n"
-                + " FOREIGN KEY(item_id) REFERENCES items(id)"
-                + ");";
-
-        try ( Connection conn = DriverManager.getConnection ( DATA_URL );
-              Statement stmt = conn.createStatement () ) {
-            stmt.execute ( items );
-            stmt.execute ( employees );
-            stmt.execute ( tickets );
-            stmt.execute ( ticketItems );
-        } catch ( SQLException e ) {
-            System.out.println ( e.getMessage () );
-        }
+        Database.createNewDatabase ( );
+        launch(args);
     }
 
     @Override
     public void start ( Stage primaryStage ) throws Exception {
 
-        Parent root =
-                FXMLLoader.load ( getClass ( ).getResource ( "sample.fxml" ) );
-        primaryStage.setTitle ( "Hello World" );
-        primaryStage.setScene ( new Scene ( root, 300, 275 ) );
-        primaryStage.show ( );
+        Label labelFirstName = new Label ( "First Name" );
+        labelFirstName.getStyleClass ( ).add ( FORM_LABEL );
+        TextField textFirstName = new TextField ( );
+        Label     labelLastName = new Label ( "Last Name" );
+        labelLastName.getStyleClass ( ).add ( FORM_LABEL );
+        TextField textLastName  = new TextField ( );
+        Label     labelPosition = new Label ( "Position" );
+        labelPosition.getStyleClass ( ).add ( FORM_LABEL );
+        ChoiceBox menuPosition = new ChoiceBox ( );
+        menuPosition.setItems ( Database.getPositions ( ) );
+        Button buttAddEmployee = new Button ( "Add Employee" );
+
+        GridPane gp = new GridPane ( );
+        gp.add ( labelFirstName, 0, 0 );
+        gp.add ( textFirstName, 1, 0 );
+        gp.add ( labelLastName, 0, 1 );
+        gp.add ( textLastName, 1, 1 );
+        gp.add ( labelPosition, 0, 2 );
+        gp.add ( menuPosition, 1, 2 );
+        gp.add ( buttAddEmployee, 0, 3, 2, 1 );
+
+        Scene scene = new Scene ( gp, 300, 300 );
+        primaryStage.setTitle ( "Add Employee" );
+        primaryStage.setScene ( scene );
+        primaryStage.show ();
     }
 }
