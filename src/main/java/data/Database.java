@@ -9,6 +9,11 @@ public class Database {
 
     private static final String DATA_URL = "jdbc:sqlite:./data.db";
 
+    private Database ( ) {
+
+        throw new IllegalStateException ( "Utility class" );
+    }
+
     public static void createNewDatabase ( ) {
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL ) ) {
