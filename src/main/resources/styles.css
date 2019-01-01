@@ -2,3 +2,9 @@
     -fx-font: normal bold 16px 'sans';
     -fx-pref-width: 200;
 }
+
+.title {
+    -fx-font: normal bold 36px 'sans';
+    -fx-border-style: solid none;
+    -fx-padding: 10px 0px;
+}
