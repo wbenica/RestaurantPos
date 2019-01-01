@@ -41,15 +41,34 @@ public class Database {
             }
         }
         catch ( SQLException e ) {
-            e.printStackTrace ( );
+            System.out.println ( e.getMessage ( ) );
         }
 
         return result;
     }
 
+    // TODO: need to verify input
+    public static void addEmployee ( String f_name,
+                                     String l_name,
+                                     String pos
+    ) {
+
+        String cmd = "INSERT INTO employees(first_name, last_name, position)\n"
+                + " VALUES ( \"" + f_name + "\", \"" + l_name + "\", \"" + pos +
+                "\");";
+
+        try ( Connection conn = DriverManager.getConnection ( DATA_URL );
+              Statement stmt = conn.createStatement ( ) ) {
+            stmt.execute ( cmd );
+        }
+        catch ( SQLException e ) {
+            System.out.println ( e.getMessage ( ) );
+        }
+    }
+
     private static void addPositions ( ) {
 
-        String positions = "INSERT INTO positions\n"
+        String positions = "INSERT OR IGNORE INTO positions\n"
                 + " VALUES ( \"Manager\"), (\"Server\"), (\"Busser\" );";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
@@ -95,7 +114,7 @@ public class Database {
                 + ");";
 
         String positions = "CREATE TABLE IF NOT EXISTS positions (\n"
-                + " title string"
+                + " title string UNIQUE "
                 + ");";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
