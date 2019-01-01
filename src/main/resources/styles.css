@@ -1,0 +1,4 @@
+.form_label {
+    -fx-font: normal bold 16px 'sans';
+    -fx-pref-width: 200;
+}
