@@ -22,7 +22,7 @@ public class EmployeeController {
         TextField textLastName  = new TextField ( );
         Label     labelPosition = new Label ( "Position" );
         labelPosition.getStyleClass ( ).add ( Main.FORM_LABEL );
-        ChoiceBox menuPosition = new ChoiceBox ( );
+        ChoiceBox<String> menuPosition = new ChoiceBox<> ( );
         menuPosition.setItems ( Database.getPositions ( ) );
         menuPosition.setPrefWidth ( 200 );
         Button buttAddEmployee = new Button ( "Add Employee" );
@@ -44,7 +44,7 @@ public class EmployeeController {
 
                     String first = textFirstName.getText ( );
                     String last  = textLastName.getText ( );
-                    String pos   = menuPosition.getValue ( ).toString ( );
+                    String pos   = menuPosition.getValue ( );
                     Database.addEmployee ( first, last, pos );
                     textFirstName.clear ( );
                     textLastName.clear ( );
@@ -58,21 +58,24 @@ public class EmployeeController {
         VBox  boop  = new VBox ( );
         Label title = new Label ( "Search Employee" );
         title.getStyleClass ( ).add ( Main.TITLE );
-        TextField   searchBar    = new TextField ( "Enter name or employee id" );
-        TableView   resultsTable = new TableView ( );
-        TableColumn idCol        = new TableColumn ( "Emp ID" );
+        TextField           searchBar    = new TextField ( "Enter name or employee id" );
+        TableView<Employee> resultsTable = new TableView<> ( );
+        TableColumn<Employee, Integer> idCol = new TableColumn<> (
+                "Emp ID" );
         idCol.setCellValueFactory (
-                new PropertyValueFactory<Employee, Integer> (
+                new PropertyValueFactory<> (
                         "id" )
         );
-        TableColumn firstCol = new TableColumn ( "First Name" );
+        TableColumn<Employee, String> firstCol = new TableColumn<> ( "First " +
+                "Name" );
         firstCol.setCellValueFactory (
-                new PropertyValueFactory<Employee, String> (
+                new PropertyValueFactory<> (
                         "firstName" )
         );
-        TableColumn lastCol = new TableColumn ( "Last Name" );
+        TableColumn<Employee, String> lastCol = new TableColumn<> ( "Last " +
+                "Name" );
         lastCol.setCellValueFactory (
-                new PropertyValueFactory<Employee, String> (
+                new PropertyValueFactory<> (
                         "lastName" )
         );
         resultsTable.getColumns ( ).addAll ( idCol, firstCol, lastCol );

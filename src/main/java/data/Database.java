@@ -28,7 +28,7 @@ public class Database {
         }
     }
 
-    public static ObservableList getPositions ( ) {
+    public static ObservableList<String> getPositions ( ) {
 
         ObservableList<String> result =
                 FXCollections.observableArrayList ( );
@@ -48,7 +48,7 @@ public class Database {
         return result;
     }
 
-    public static ObservableList getEmployees ( String value ) {
+    public static ObservableList<Employee> getEmployees ( String value ) {
 
         ObservableList<Employee> result = FXCollections.observableArrayList ( );
         String employees = "SELECT empl_id, first_name, last_name\n"

@@ -36,13 +36,11 @@ public class MainController {
 
         MenuItem addEmployee = new MenuItem ( "Add employee" );
         addEmployee.setOnAction (
-                event -> {
-                    setMain ( getSceneAddEmployee ( ), main );
-                } );
+                event -> setMain ( getSceneAddEmployee ( ), main ) );
 
         MenuItem findEmployee = new MenuItem ( "Search" );
         findEmployee.setOnAction (
-                event -> { setMain ( getSceneSearchEmployee ( ), main );}
+                event -> setMain ( getSceneSearchEmployee ( ), main )
         );
 
         menuEmployees.getItems ( ).addAll ( addEmployee, findEmployee );
