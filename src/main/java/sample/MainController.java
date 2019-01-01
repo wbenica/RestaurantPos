@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -16,23 +17,10 @@ public class MainController {
     public static Scene getMain ( ) {
 
         VBox mainWindow = new VBox ( );
-
-        MenuBar  menuBar       = new MenuBar ( );
-        Menu     menuEmployees = new Menu ( "Employees" );
-        MenuItem addEmployee   = new MenuItem ( "Add employee" );
-        addEmployee.setOnAction (
-                event -> {
-                    setMain ( getSceneAddEmployee ( ), mainWindow );
-                } );
-        MenuItem findEmployee = new MenuItem ( "Search" );
-        findEmployee.setOnAction (
-                event -> { setMain ( getSceneSearchEmployee ( ), mainWindow );}
-        );
-        menuEmployees.getItems ( ).addAll ( addEmployee, findEmployee );
-        menuBar.getMenus ( ).addAll ( menuEmployees );
-        mainWindow.getChildren ( ).add ( menuBar );
-
-        mainWindow.getChildren ( ).add ( new Label ( "Welcome" ) );
+        mainWindow.getChildren ( ).add ( getMenuBar ( mainWindow ) );
+        Label start = new Label ( "Welcome" );
+        start.getStyleClass ( ).add ( "start" );
+        mainWindow.getChildren ( ).add ( start );
 
         Scene scene = new Scene ( mainWindow );
         scene.getStylesheets ( ).add ( "styles.css" );
@@ -40,10 +28,34 @@ public class MainController {
         return scene;
     }
 
+    private static MenuBar getMenuBar ( Pane main ) {
+
+        MenuBar menuBar = new MenuBar ( );
+
+        Menu menuEmployees = new Menu ( "Employees" );
+
+        MenuItem addEmployee = new MenuItem ( "Add employee" );
+        addEmployee.setOnAction (
+                event -> {
+                    setMain ( getSceneAddEmployee ( ), main );
+                } );
+
+        MenuItem findEmployee = new MenuItem ( "Search" );
+        findEmployee.setOnAction (
+                event -> { setMain ( getSceneSearchEmployee ( ), main );}
+        );
+
+        menuEmployees.getItems ( ).addAll ( addEmployee, findEmployee );
+
+        menuBar.getMenus ( ).addAll ( menuEmployees );
+        return menuBar;
+    }
+
     private static void setMain ( Pane scene,
                                   Pane mainWindow ) {
 
         mainWindow.getChildren ( ).remove ( 1 );
+        scene.setPadding ( new Insets ( 24 ) );
         mainWindow.getChildren ( ).add ( scene );
     }
 }

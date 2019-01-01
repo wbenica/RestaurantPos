@@ -4,6 +4,8 @@ import data.Database;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import static sample.MainController.getMain;
+
 public class Main extends Application {
 
     public static final String FORM_LABEL = "form_label";
@@ -19,8 +21,7 @@ public class Main extends Application {
     public void start ( Stage primaryStage ) {
 
         primaryStage.setTitle ( "Expo" );
-        primaryStage.setFullScreen ( true );
-        primaryStage.setScene ( MainController.getMain ( ) );
+        primaryStage.setScene ( getMain ( ) );
         primaryStage.show ( );
     }
 }

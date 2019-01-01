@@ -1,5 +1,6 @@
 package data;
 
+import employees.Employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -38,6 +39,32 @@ public class Database {
               ResultSet rs = stmt.executeQuery ( positions ) ) {
             while ( rs.next ( ) ) {
                 result.add ( rs.getString ( "title" ) );
+            }
+        }
+        catch ( SQLException e ) {
+            System.out.println ( e.getMessage ( ) );
+        }
+
+        return result;
+    }
+
+    public static ObservableList getEmployees ( String value ) {
+
+        ObservableList<Employee> result = FXCollections.observableArrayList ( );
+        String employees = "SELECT empl_id, first_name, last_name\n"
+                + " FROM employees\n"
+                + " WHERE (empl_id LIKE \"%" + value + "%\")"
+                + " OR (first_name LIKE \"%" + value + "%\")"
+                + " OR (last_name LIKE \"%" + value + "%\");";
+
+        try ( Connection conn = DriverManager.getConnection ( DATA_URL );
+              Statement stmt = conn.createStatement ( );
+              ResultSet rs = stmt.executeQuery ( employees ) ) {
+            while ( rs.next ( ) ) {
+                result.add ( new Employee (
+                        Integer.parseInt ( rs.getString ( "empl_id" ) ),
+                        rs.getString ( "first_name" ),
+                        rs.getString ( "last_name" ) ) );
             }
         }
         catch ( SQLException e ) {

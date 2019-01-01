@@ -2,10 +2,8 @@ package employees;
 
 import data.Database;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import sample.Main;
@@ -57,9 +55,34 @@ public class EmployeeController {
 
     public static VBox getSceneSearchEmployee ( ) {
 
-        VBox      boop      = new VBox ( );
-        TextField searchBar = new TextField ( "Enter name or employee id" );
-        boop.getChildren ( ).addAll ( searchBar );
+        VBox  boop  = new VBox ( );
+        Label title = new Label ( "Search Employee" );
+        title.getStyleClass ( ).add ( Main.TITLE );
+        TextField   searchBar    = new TextField ( "Enter name or employee id" );
+        TableView   resultsTable = new TableView ( );
+        TableColumn idCol        = new TableColumn ( "Emp ID" );
+        idCol.setCellValueFactory (
+                new PropertyValueFactory<Employee, Integer> (
+                        "id" )
+        );
+        TableColumn firstCol = new TableColumn ( "First Name" );
+        firstCol.setCellValueFactory (
+                new PropertyValueFactory<Employee, String> (
+                        "firstName" )
+        );
+        TableColumn lastCol = new TableColumn ( "Last Name" );
+        lastCol.setCellValueFactory (
+                new PropertyValueFactory<Employee, String> (
+                        "lastName" )
+        );
+        resultsTable.getColumns ( ).addAll ( idCol, firstCol, lastCol );
+        searchBar.setOnKeyReleased (
+                event -> {
+                    String val = searchBar.getText ( );
+                    resultsTable.setItems ( Database.getEmployees ( val ) );
+                }
+        );
+        boop.getChildren ( ).addAll ( title, searchBar, resultsTable );
 
         return boop;
     }
