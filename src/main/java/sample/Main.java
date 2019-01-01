@@ -50,10 +50,10 @@ public class Main extends Application {
         buttAddEmployee.setOnMouseReleased (
                 event -> {
 
-                    String f_name = textFirstName.getText ( );
-                    String l_name = textLastName.getText ( );
-                    String pos    = menuPosition.getValue ( ).toString ( );
-                    Database.addEmployee ( f_name, l_name, pos );
+                    String first = textFirstName.getText ( );
+                    String last  = textLastName.getText ( );
+                    String pos   = menuPosition.getValue ( ).toString ( );
+                    Database.addEmployee ( first, last, pos );
                     textFirstName.clear ( );
                     textLastName.clear ( );
                     menuPosition.setValue ( null );

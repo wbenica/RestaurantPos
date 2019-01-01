@@ -48,13 +48,13 @@ public class Database {
     }
 
     // TODO: need to verify input
-    public static void addEmployee ( String f_name,
-                                     String l_name,
+    public static void addEmployee ( String fName,
+                                     String lName,
                                      String pos
     ) {
 
         String cmd = "INSERT INTO employees(first_name, last_name, position)\n"
-                + " VALUES ( \"" + f_name + "\", \"" + l_name + "\", \"" + pos +
+                + " VALUES ( \"" + fName + "\", \"" + lName + "\", \"" + pos +
                 "\");";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
