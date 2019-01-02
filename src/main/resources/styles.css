@@ -1,10 +1,14 @@
 .menu-bar {
-    -fx-background-color: #CCEECC;
+    -fx-background-color: #AAAAAA;
     -fx-font-size: 24px;
 }
 
+.column-header {
+    -fx-background-color: #AAAAAA;
+}
+
 .menu:hover {
-    -fx-background-color: #F0F0F0;
+    -fx-background-color: #33AA00;
 }
 
 .menu:showing .label,
@@ -16,7 +20,7 @@
 .menu-item:focused,
 .menu-item:focused .label {
     -fx-text-fill: black;
-    -fx-background-color: #CCCCCC;
+    -fx-background-color: #0A3A30;
     -fx-highlight-fill: white;
 }
 
@@ -42,4 +46,5 @@
     -fx-font: normal bold 36px "sans";
     -fx-border-style: solid none;
     -fx-padding: 10px 0px;
+    -fx-border-insets: 10px 0px;
 }

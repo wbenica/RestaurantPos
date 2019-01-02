@@ -3,14 +3,25 @@ package employees;
 public class Employee {
 
     int    id;
+    String firstName;
+    String lastName;
+    String position;
 
     public Employee ( int id,
                       String firstName,
-                      String lastName ) {
+                      String lastName,
+                      String position ) {
 
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.position = position;
+
+    }
+
+    public String getPosition ( ) {
+
+        return position;
     }
 
     public int getId ( ) {
@@ -22,9 +33,6 @@ public class Employee {
 
         return firstName;
     }
-
-    String firstName;
-    String lastName;
 
     public String getLastName ( ) {
 

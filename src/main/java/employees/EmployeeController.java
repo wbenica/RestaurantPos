@@ -44,7 +44,8 @@ public class EmployeeController {
 
                     String first = textFirstName.getText ( );
                     String last  = textLastName.getText ( );
-                    String pos   = menuPosition.getValue ( );
+                    Integer pos = Database.getPositionId (
+                            menuPosition.getValue ( ) );
                     Database.addEmployee ( first, last, pos );
                     textFirstName.clear ( );
                     textLastName.clear ( );
@@ -55,36 +56,48 @@ public class EmployeeController {
 
     public static VBox getSceneSearchEmployee ( ) {
 
-        VBox  boop  = new VBox ( );
+        VBox boop = new VBox ( );
+
         Label title = new Label ( "Search Employee" );
         title.getStyleClass ( ).add ( Main.TITLE );
-        TextField           searchBar    = new TextField ( "Enter name or employee id" );
+
+        TextField searchBar =
+                new TextField ( "Enter name or employee id" );
         TableView<Employee> resultsTable = new TableView<> ( );
-        TableColumn<Employee, Integer> idCol = new TableColumn<> (
-                "Emp ID" );
-        idCol.setCellValueFactory (
-                new PropertyValueFactory<> (
-                        "id" )
+
+        searchBar.setOnMouseClicked (
+                event -> searchBar.selectAll ( )
         );
-        TableColumn<Employee, String> firstCol = new TableColumn<> ( "First " +
-                "Name" );
-        firstCol.setCellValueFactory (
-                new PropertyValueFactory<> (
-                        "firstName" )
-        );
-        TableColumn<Employee, String> lastCol = new TableColumn<> ( "Last " +
-                "Name" );
-        lastCol.setCellValueFactory (
-                new PropertyValueFactory<> (
-                        "lastName" )
-        );
-        resultsTable.getColumns ( ).addAll ( idCol, firstCol, lastCol );
+
         searchBar.setOnKeyReleased (
                 event -> {
                     String val = searchBar.getText ( );
                     resultsTable.setItems ( Database.getEmployees ( val ) );
                 }
         );
+
+        TableColumn<Employee, Integer> idCol = new TableColumn<> (
+                "Emp ID" );
+        idCol.setCellValueFactory ( new PropertyValueFactory<> ( "id" ) );
+
+        TableColumn<Employee, String> firstCol = new TableColumn<> ( "First " +
+                "Name" );
+        firstCol.setCellValueFactory (
+                new PropertyValueFactory<> ( "firstName" ) );
+
+        TableColumn<Employee, String> lastCol =
+                new TableColumn<> ( "Last Name" );
+        lastCol.setCellValueFactory (
+                new PropertyValueFactory<> ( "lastName" ) );
+
+        TableColumn<Employee, String> positionCol =
+                new TableColumn<> ( "Position" );
+        positionCol.setCellValueFactory (
+                new PropertyValueFactory<> ( "position" ) );
+
+        resultsTable.getColumns ( )
+                .addAll ( idCol, firstCol, lastCol, positionCol );
+
         boop.getChildren ( ).addAll ( title, searchBar, resultsTable );
 
         return boop;

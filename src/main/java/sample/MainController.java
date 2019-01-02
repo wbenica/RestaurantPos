@@ -8,6 +8,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import skus.SkusController;
 
 import static employees.EmployeeController.getSceneAddEmployee;
 import static employees.EmployeeController.getSceneSearchEmployee;
@@ -45,7 +46,15 @@ public class MainController {
 
         menuEmployees.getItems ( ).addAll ( addEmployee, findEmployee );
 
-        menuBar.getMenus ( ).addAll ( menuEmployees );
+        Menu menuSkus = new Menu ( "SKUs" );
+
+        MenuItem editSkus = new MenuItem ( "Edit SKUs" );
+        editSkus.setOnAction (
+                event -> setMain ( SkusController.getSceneEditSkus ( ), main )
+        );
+
+        menuSkus.getItems ( ).addAll ( editSkus );
+        menuBar.getMenus ( ).addAll ( menuEmployees, menuSkus );
         return menuBar;
     }
 

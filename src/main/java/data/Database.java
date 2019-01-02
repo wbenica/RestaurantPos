@@ -10,6 +10,28 @@ public class Database {
 
     private static final String DATA_URL = "jdbc:sqlite:./data.db";
 
+    public static Integer getPositionId ( String value ) {
+
+        String cmd = "SELECT ROWID"
+                + " FROM positions"
+                + " WHERE title = \"" + value + "\"";
+
+        Integer result = null;
+
+        try ( Connection conn = DriverManager.getConnection ( DATA_URL );
+              Statement stmt = conn.createStatement ( );
+              ResultSet rs = stmt.executeQuery ( cmd ) ) {
+            if ( rs.next ( ) ) {
+                result = rs.getInt ( 1 );
+            }
+        }
+        catch ( SQLException e ) {
+            System.out.println ( e.getMessage ( ) );
+        }
+
+        return result;
+    }
+
     private Database ( ) {
 
         throw new IllegalStateException ( "Utility class" );
@@ -51,8 +73,10 @@ public class Database {
     public static ObservableList<Employee> getEmployees ( String value ) {
 
         ObservableList<Employee> result = FXCollections.observableArrayList ( );
-        String employees = "SELECT empl_id, first_name, last_name\n"
-                + " FROM employees\n"
+        String employees = "SELECT empl_id, first_name, last_name, title\n"
+                + " FROM employees"
+                +
+                " INNER JOIN positions ON employees.position = positions.ROWID"
                 + " WHERE (empl_id LIKE \"%" + value + "%\")"
                 + " OR (first_name LIKE \"%" + value + "%\")"
                 + " OR (last_name LIKE \"%" + value + "%\");";
@@ -62,9 +86,10 @@ public class Database {
               ResultSet rs = stmt.executeQuery ( employees ) ) {
             while ( rs.next ( ) ) {
                 result.add ( new Employee (
-                        Integer.parseInt ( rs.getString ( "empl_id" ) ),
+                        rs.getInt ( "empl_id" ),
                         rs.getString ( "first_name" ),
-                        rs.getString ( "last_name" ) ) );
+                        rs.getString ( "last_name" ),
+                        rs.getString ( "title" ) ) );
             }
         }
         catch ( SQLException e ) {
@@ -77,12 +102,11 @@ public class Database {
     // TODO: need to verify input
     public static void addEmployee ( String fName,
                                      String lName,
-                                     String pos
-    ) {
+                                     Integer pos ) {
 
         String cmd = "INSERT INTO employees(first_name, last_name, position)\n"
-                + " VALUES ( \"" + fName + "\", \"" + lName + "\", \"" + pos +
-                "\");";
+                + " VALUES ( \"" + fName + "\", \"" + lName + "\", " + pos +
+                " );";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
               Statement stmt = conn.createStatement ( ) ) {
@@ -121,7 +145,8 @@ public class Database {
                 + " empl_id integer PRIMARY KEY,\n"
                 + " first_name text NOT NULL, \n"
                 + " last_name text NOT NULL,\n"
-                + " position text NOT NULL"
+                + " position integer NOT NULL,\n"
+                + " FOREIGN KEY (position) REFERENCES positions(rowid)"
                 + ");";
 
         String tickets = "CREATE TABLE IF NOT EXISTS tickets (\n"

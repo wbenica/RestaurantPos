@@ -1,14 +1,14 @@
 package skus;
 
-import employees.Server;
+import employees.Employee;
 
 public class Ticket {
 
     private static int currentTicket = 0;
 
-    Table  table;
-    int    ticketNum;
-    Server server;
+    Table    table;
+    int      ticketNum;
+    Employee server;
 
     public static int getCurrentTicket ( ) {
 
