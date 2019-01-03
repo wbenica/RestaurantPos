@@ -1,0 +1,7 @@
+.menu-button:showing,
+.menu-button:hover,
+.menu-button:focused,
+.menu-item:focused,
+.menu-item:hover {
+    -fx-background-color: #dddddd;
+}

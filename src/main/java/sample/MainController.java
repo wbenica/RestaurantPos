@@ -18,13 +18,14 @@ public class MainController {
     public static Scene getMain ( ) {
 
         VBox mainWindow = new VBox ( );
+        mainWindow.getStyleClass ( ).add ( "main" );
         mainWindow.getChildren ( ).add ( getMenuBar ( mainWindow ) );
         Label start = new Label ( "Welcome" );
         start.getStyleClass ( ).add ( "start" );
         mainWindow.getChildren ( ).add ( start );
 
         Scene scene = new Scene ( mainWindow );
-        scene.getStylesheets ( ).add ( "styles.css" );
+        scene.getStylesheets ( ).addAll ( "controls.css", "menu.css" );
 
         return scene;
     }
@@ -62,7 +63,7 @@ public class MainController {
                                   Pane mainWindow ) {
 
         mainWindow.getChildren ( ).remove ( 1 );
-        scene.setPadding ( new Insets ( 24 ) );
+        scene.setPadding ( new Insets ( 0, 24, 24, 24 ) );
         mainWindow.getChildren ( ).add ( scene );
     }
 }

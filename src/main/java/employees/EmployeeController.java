@@ -25,6 +25,18 @@ public class EmployeeController {
         ChoiceBox<String> menuPosition = new ChoiceBox<> ( );
         menuPosition.setItems ( Database.getPositions ( ) );
         menuPosition.setPrefWidth ( 200 );
+        Label labelHireDate = new Label ( "Hire Date" );
+        labelHireDate.getStyleClass ( ).add ( Main.FORM_LABEL );
+        TextField textHireDate         = new TextField ( );
+        Label     labelTerminationDate = new Label ( "Termination Date" );
+        labelTerminationDate.getStyleClass ( ).add ( Main.FORM_LABEL );
+        TextField textTerminationDate = new TextField ( );
+        Label     labelIsSalaried     = new Label ( "Salaried" );
+        labelIsSalaried.getStyleClass ( ).add ( Main.FORM_LABEL );
+        CheckBox checkIsSalaried = new CheckBox ( );
+        Label    labelPayRate    = new Label ( "Pay Rate" );
+        labelPayRate.getStyleClass ( ).add ( Main.FORM_LABEL );
+        TextField textPayRate  = new TextField ( );
         Button buttAddEmployee = new Button ( "Add Employee" );
 
         GridPane gp = new GridPane ( );
@@ -38,7 +50,15 @@ public class EmployeeController {
         gp.add ( textLastName, 1, 2 );
         gp.add ( labelPosition, 0, 3 );
         gp.add ( menuPosition, 1, 3 );
-        gp.add ( buttAddEmployee, 0, 4, 2, 1 );
+        gp.add ( labelHireDate, 0, 4 );
+        gp.add ( textHireDate, 1, 4 );
+        gp.add ( labelTerminationDate, 0, 5 );
+        gp.add ( textTerminationDate, 1, 5 );
+        gp.add ( labelIsSalaried, 0, 6 );
+        gp.add ( checkIsSalaried, 1, 6 );
+        gp.add ( labelPayRate, 0, 7 );
+        gp.add ( textPayRate, 1, 7 );
+        gp.add ( buttAddEmployee, 0, 8, 2, 1 );
         buttAddEmployee.setOnMouseReleased (
                 event -> {
 

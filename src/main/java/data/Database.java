@@ -6,36 +6,54 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 
+// TODO: set version number of database, update if needed
 public class Database {
 
     private static final String DATA_URL = "jdbc:sqlite:./data.db";
+    private static final String ITEMS    =
+            "CREATE TABLE IF NOT EXISTS items (\n"
+                    + " sku integer PRIMARY KEY,\n"
+                    + " name text NOT NULL, \n"
+                    + " buttonName text NOT NULL,\n"
+                    + " price real NOT NULL"
+                    + ");";
 
-    public static Integer getPositionId ( String value ) {
+    private static final String EMPLOYEES =
+            "CREATE TABLE IF NOT EXISTS employees (\n"
+                    + " empl_id integer PRIMARY KEY,\n"
+                    + " first_name text NOT NULL, \n"
+                    + " last_name text NOT NULL,\n"
+                    + " position integer NOT NULL,\n"
+                    + " hire_date text NOT NULL,\n"
+                    + " termination_date text,\n"
+                    + " is_salaried text NOT NULL CHECK (is_salaried = 0 OR "
+                    + "is_salaried = 1),\n"
+                    + " pay_rate real NOT NULL,\n"
+                    + " FOREIGN KEY (position) REFERENCES positions(rowid)"
+                    + ");";
 
-        String cmd = "SELECT ROWID"
-                + " FROM positions"
-                + " WHERE title = \"" + value + "\"";
+    private static final String TICKETS =
+            "CREATE TABLE IF NOT EXISTS tickets (\n"
+                    + " check_no integer PRIMARY KEY,\n"
+                    + " server integer NOT NULL, \n"
+                    + " date integer NOT NULL,\n"
+                    + " open_time integer NOT NULL,\n"
+                    + " close_time integer NOT NULL,\n"
+                    + " FOREIGN KEY (server) REFERENCES employees(id)"
+                    + ");";
 
-        Integer result = null;
+    private static final String TICKET_ITEMS =
+            "CREATE TABLE IF NOT EXISTS ticket_items (\n"
+                    + " check_no integer,\n"
+                    + " sku integer,\n"
+                    + " FOREIGN KEY(check_no) REFERENCES tickets(check_no),\n"
+                    + " FOREIGN KEY(sku) REFERENCES items(sku)"
+                    + ");";
 
-        try ( Connection conn = DriverManager.getConnection ( DATA_URL );
-              Statement stmt = conn.createStatement ( );
-              ResultSet rs = stmt.executeQuery ( cmd ) ) {
-            if ( rs.next ( ) ) {
-                result = rs.getInt ( 1 );
-            }
-        }
-        catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
-        }
-
-        return result;
-    }
-
-    private Database ( ) {
-
-        throw new IllegalStateException ( "Utility class" );
-    }
+    private static final String POSITIONS =
+            "CREATE TABLE IF NOT EXISTS positions (\n"
+                    + " title string UNIQUE "
+                    + ");";
 
     public static void createNewDatabase ( ) {
 
@@ -70,6 +88,28 @@ public class Database {
         return result;
     }
 
+    public static Integer getPositionId ( String value ) {
+
+        String cmd = "SELECT ROWID"
+                + " FROM positions"
+                + " WHERE title = \"" + value + "\"";
+
+        Integer result = null;
+
+        try ( Connection conn = DriverManager.getConnection ( DATA_URL );
+              Statement stmt = conn.createStatement ( );
+              ResultSet rs = stmt.executeQuery ( cmd ) ) {
+            if ( rs.next ( ) ) {
+                result = rs.getInt ( 1 );
+            }
+        }
+        catch ( SQLException e ) {
+            System.out.println ( e.getMessage ( ) );
+        }
+
+        return result;
+    }
+
     public static ObservableList<Employee> getEmployees ( String value ) {
 
         ObservableList<Employee> result = FXCollections.observableArrayList ( );
@@ -79,7 +119,8 @@ public class Database {
                 " INNER JOIN positions ON employees.position = positions.ROWID"
                 + " WHERE (empl_id LIKE \"%" + value + "%\")"
                 + " OR (first_name LIKE \"%" + value + "%\")"
-                + " OR (last_name LIKE \"%" + value + "%\");";
+                + " OR (last_name LIKE \"%" + value + "%\")"
+                + " OR (title LIKE \"%" + value + "%\");";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
               Statement stmt = conn.createStatement ( );
@@ -89,7 +130,11 @@ public class Database {
                         rs.getInt ( "empl_id" ),
                         rs.getString ( "first_name" ),
                         rs.getString ( "last_name" ),
-                        rs.getString ( "title" ) ) );
+                        rs.getString ( "title" ),
+                        rs.getDate ( "hire_date" ),
+                        rs.getDate ( "termination_date" ),
+                        rs.getBoolean ( "is_salaried" ),
+                        rs.getDouble ( "pay_rate" ) ) );
             }
         }
         catch ( SQLException e ) {
@@ -134,51 +179,21 @@ public class Database {
 
     private static void createTables ( ) {
 
-        String items = "CREATE TABLE IF NOT EXISTS items (\n"
-                + " sku integer PRIMARY KEY,\n"
-                + " name text NOT NULL, \n"
-                + " buttonName text NOT NULL,\n"
-                + " price real NOT NULL"
-                + ");";
-
-        String employees = "CREATE TABLE IF NOT EXISTS employees (\n"
-                + " empl_id integer PRIMARY KEY,\n"
-                + " first_name text NOT NULL, \n"
-                + " last_name text NOT NULL,\n"
-                + " position integer NOT NULL,\n"
-                + " FOREIGN KEY (position) REFERENCES positions(rowid)"
-                + ");";
-
-        String tickets = "CREATE TABLE IF NOT EXISTS tickets (\n"
-                + " check_no integer PRIMARY KEY,\n"
-                + " server integer NOT NULL, \n"
-                + " date integer NOT NULL,\n"
-                + " open_time integer NOT NULL,\n"
-                + " close_time integer NOT NULL,\n"
-                + " FOREIGN KEY (server) REFERENCES employees(id)"
-                + ");";
-
-        String ticketItems = "CREATE TABLE IF NOT EXISTS ticket_items (\n"
-                + " check_no integer,\n"
-                + " sku integer,\n"
-                + " FOREIGN KEY(check_no) REFERENCES tickets(check_no),\n"
-                + " FOREIGN KEY(sku) REFERENCES items(sku)"
-                + ");";
-
-        String positions = "CREATE TABLE IF NOT EXISTS positions (\n"
-                + " title string UNIQUE "
-                + ");";
-
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
               Statement stmt = conn.createStatement ( ) ) {
-            stmt.execute ( items );
-            stmt.execute ( employees );
-            stmt.execute ( tickets );
-            stmt.execute ( ticketItems );
-            stmt.execute ( positions );
+            stmt.execute ( ITEMS );
+            stmt.execute ( EMPLOYEES );
+            stmt.execute ( TICKETS );
+            stmt.execute ( TICKET_ITEMS );
+            stmt.execute ( POSITIONS );
         }
         catch ( SQLException e ) {
             System.out.println ( e.getMessage ( ) );
         }
+    }
+
+    private Database ( ) {
+
+        throw new IllegalStateException ( "Utility class" );
     }
 }
