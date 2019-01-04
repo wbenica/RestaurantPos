@@ -20,16 +20,15 @@ public class Database {
 
     private static final String EMPLOYEES =
             "CREATE TABLE IF NOT EXISTS employees (\n"
-                    + " empl_id integer PRIMARY KEY,\n"
                     + " first_name text NOT NULL, \n"
                     + " last_name text NOT NULL,\n"
                     + " position integer NOT NULL,\n"
                     + " hire_date text NOT NULL,\n"
                     + " termination_date text,\n"
-                    + " is_salaried text NOT NULL CHECK (is_salaried = 0 OR "
-                    + "is_salaried = 1),\n"
+                    + " is_salaried integer NOT NULL CHECK (is_salaried IN"
+                    + " (0, 1)),\n"
                     + " pay_rate real NOT NULL,\n"
-                    + " FOREIGN KEY (position) REFERENCES positions(rowid)"
+                    + " FOREIGN KEY (position) REFERENCES positions(ROWID)"
                     + ");";
 
     private static final String TICKETS =
@@ -39,7 +38,7 @@ public class Database {
                     + " date integer NOT NULL,\n"
                     + " open_time integer NOT NULL,\n"
                     + " close_time integer NOT NULL,\n"
-                    + " FOREIGN KEY (server) REFERENCES employees(id)"
+                    + " FOREIGN KEY (server) REFERENCES employees(ROWID)"
                     + ");";
 
     private static final String TICKET_ITEMS =
@@ -113,11 +112,12 @@ public class Database {
     public static ObservableList<Employee> getEmployees ( String value ) {
 
         ObservableList<Employee> result = FXCollections.observableArrayList ( );
-        String employees = "SELECT empl_id, first_name, last_name, title\n"
+        String employees = "SELECT employees.ROWID, first_name, last_name, " +
+                "title, hire_date, termination_date, is_salaried, pay_rate\n"
                 + " FROM employees"
                 +
                 " INNER JOIN positions ON employees.position = positions.ROWID"
-                + " WHERE (empl_id LIKE \"%" + value + "%\")"
+                + " WHERE (employees.ROWID LIKE \"%" + value + "%\")"
                 + " OR (first_name LIKE \"%" + value + "%\")"
                 + " OR (last_name LIKE \"%" + value + "%\")"
                 + " OR (title LIKE \"%" + value + "%\");";
@@ -127,7 +127,7 @@ public class Database {
               ResultSet rs = stmt.executeQuery ( employees ) ) {
             while ( rs.next ( ) ) {
                 result.add ( new Employee (
-                        rs.getInt ( "empl_id" ),
+                        rs.getInt ( "ROWID" ),
                         rs.getString ( "first_name" ),
                         rs.getString ( "last_name" ),
                         rs.getString ( "title" ),
@@ -147,11 +147,17 @@ public class Database {
     // TODO: need to verify input
     public static void addEmployee ( String fName,
                                      String lName,
-                                     Integer pos ) {
+                                     Integer pos,
+                                     String hireDate,
+                                     String terminationDate,
+                                     Integer isSalaried,
+                                     Double payRate ) {
 
-        String cmd = "INSERT INTO employees(first_name, last_name, position)\n"
-                + " VALUES ( \"" + fName + "\", \"" + lName + "\", " + pos +
-                " );";
+        String cmd = "INSERT INTO employees\n"
+                + " VALUES ( \"" + fName + "\", \"" + lName + "\", " +
+                pos +
+                ", \"" + hireDate + "\", \"" + terminationDate + "\", " +
+                isSalaried + ", " + payRate + " );";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
               Statement stmt = conn.createStatement ( ) ) {

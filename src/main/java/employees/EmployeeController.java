@@ -8,36 +8,46 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import sample.Main;
 
+import java.sql.Timestamp;
+import java.time.chrono.Chronology;
+
 public class EmployeeController {
 
     public static GridPane getSceneAddEmployee ( ) {
 
         Label title = new Label ( "Add Employee" );
         title.getStyleClass ( ).add ( Main.TITLE );
+
         Label labelFirstName = new Label ( "First Name" );
         labelFirstName.getStyleClass ( ).add ( Main.FORM_LABEL );
         TextField textFirstName = new TextField ( );
-        Label     labelLastName = new Label ( "Last Name" );
+
+        Label labelLastName = new Label ( "Last Name" );
         labelLastName.getStyleClass ( ).add ( Main.FORM_LABEL );
-        TextField textLastName  = new TextField ( );
-        Label     labelPosition = new Label ( "Position" );
+        TextField textLastName = new TextField ( );
+
+        Label labelPosition = new Label ( "Position" );
         labelPosition.getStyleClass ( ).add ( Main.FORM_LABEL );
         ChoiceBox<String> menuPosition = new ChoiceBox<> ( );
         menuPosition.setItems ( Database.getPositions ( ) );
         menuPosition.setPrefWidth ( 200 );
+
         Label labelHireDate = new Label ( "Hire Date" );
         labelHireDate.getStyleClass ( ).add ( Main.FORM_LABEL );
-        TextField textHireDate         = new TextField ( );
-        Label     labelTerminationDate = new Label ( "Termination Date" );
+        DatePicker pickerHireDate = new DatePicker ( );
+
+        Label labelTerminationDate = new Label ( "Termination Date" );
         labelTerminationDate.getStyleClass ( ).add ( Main.FORM_LABEL );
-        TextField textTerminationDate = new TextField ( );
-        Label     labelIsSalaried     = new Label ( "Salaried" );
+        DatePicker pickerTerminationDate = new DatePicker ( );
+
+        Label labelIsSalaried = new Label ( "Salaried" );
         labelIsSalaried.getStyleClass ( ).add ( Main.FORM_LABEL );
         CheckBox checkIsSalaried = new CheckBox ( );
-        Label    labelPayRate    = new Label ( "Pay Rate" );
+
+        Label labelPayRate = new Label ( "Pay Rate" );
         labelPayRate.getStyleClass ( ).add ( Main.FORM_LABEL );
-        TextField textPayRate  = new TextField ( );
-        Button buttAddEmployee = new Button ( "Add Employee" );
+        TextField textPayRate     = new TextField ( );
+        Button    buttAddEmployee = new Button ( "Add Employee" );
 
         GridPane gp = new GridPane ( );
         gp.setVgap ( 5 );
@@ -51,9 +61,9 @@ public class EmployeeController {
         gp.add ( labelPosition, 0, 3 );
         gp.add ( menuPosition, 1, 3 );
         gp.add ( labelHireDate, 0, 4 );
-        gp.add ( textHireDate, 1, 4 );
+        gp.add ( pickerHireDate, 1, 4 );
         gp.add ( labelTerminationDate, 0, 5 );
-        gp.add ( textTerminationDate, 1, 5 );
+        gp.add ( pickerTerminationDate, 1, 5 );
         gp.add ( labelIsSalaried, 0, 6 );
         gp.add ( checkIsSalaried, 1, 6 );
         gp.add ( labelPayRate, 0, 7 );
@@ -66,7 +76,19 @@ public class EmployeeController {
                     String last  = textLastName.getText ( );
                     Integer pos = Database.getPositionId (
                             menuPosition.getValue ( ) );
-                    Database.addEmployee ( first, last, pos );
+                    Chronology hdate = pickerHireDate.getChronology ( );
+                    String hire = Timestamp.valueOf (
+                            pickerHireDate.getValue ( ).atStartOfDay ( ) )
+                            .toString ( );
+                    String termination = Timestamp.valueOf (
+                            pickerTerminationDate.getValue ( )
+                                    .atStartOfDay ( ) ).toString ( );
+                    Integer salaried =
+                            checkIsSalaried.isSelected ( ) ? 0 : 1;
+                    Double pay =
+                            Double.parseDouble ( textPayRate.getText ( ) );
+                    Database.addEmployee ( first, last, pos, hire, termination,
+                            salaried, pay );
                     textFirstName.clear ( );
                     textLastName.clear ( );
                     menuPosition.setValue ( null );
