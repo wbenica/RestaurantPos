@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import sample.Main;
 
 import java.sql.Timestamp;
-import java.time.chrono.Chronology;
 
 // TODO: Check dates for correctness before attempting to insert in db
 public class EmployeeController {
@@ -78,7 +77,6 @@ public class EmployeeController {
                     String last  = textLastName.getText ( );
                     Integer pos = Database.getPositionId (
                             menuPosition.getValue ( ) );
-                    Chronology hdate = pickerHireDate.getChronology ( );
                     String hire = Timestamp.valueOf (
                             pickerHireDate.getValue ( ).atStartOfDay ( ) )
                             .toString ( );
@@ -127,10 +125,6 @@ public class EmployeeController {
         searchBar.setFocusTraversable ( false );
         TableView<Employee> resultsTable = new TableView<> ( );
 
-//        searchBar.setOnMouseClicked (
-//                event -> searchBar.selectAll ( )
-//        );
-//
         searchBar.setOnKeyReleased (
                 event -> {
                     String val = searchBar.getText ( );
@@ -174,12 +168,15 @@ public class EmployeeController {
 
         HBox currEmplOnly = new HBox ( );
         currEmplOnly.getChildren ( )
-                .addAll ( new Label ( "Current employees " +
-                                "only" ), toggleCurrEmplOnlyNo,
+                .addAll ( labelCurrEmplOnly, toggleCurrEmplOnlyNo,
                         toggleCurrEmplOnlyYes );
         boop.getChildren ( ).addAll ( title, searchBar, currEmplOnly,
                 resultsTable );
 
         return boop;
+    }
+
+    private EmployeeController ( ) {
+
     }
 }

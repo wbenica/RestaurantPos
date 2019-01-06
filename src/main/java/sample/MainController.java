@@ -66,4 +66,8 @@ public class MainController {
         scene.setPadding ( new Insets ( 0, 24, 24, 24 ) );
         mainWindow.getChildren ( ).add ( scene );
     }
+
+    private MainController ( ) {
+
+    }
 }

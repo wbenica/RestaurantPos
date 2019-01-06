@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class Employee {
 
-    int     id;
-    String  firstName;
-    String  lastName;
-    String  position;
-    Date    hireDate;
-    Date    terminationDate;
-    boolean isSalaried;
-    double  payRate;
+    private final int     id;
+    private final String  firstName;
+    private final String  lastName;
+    private final Date    hireDate;
+    private       String  position;
+    private       Date    terminationDate;
+    private       boolean isSalaried;
+    private       double  payRate;
 
     public Employee ( int id,
                       String firstName,

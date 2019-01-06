@@ -5,9 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // TODO: set version number of database, update if needed
 public class Database {
+
+    final static Logger log = Logger.getLogger ( Database.class.getName ( ) );
 
     private static final String DATA_URL = "jdbc:sqlite:./data.db";
     private static final String ITEMS    =
@@ -55,19 +59,6 @@ public class Database {
                     + " title string UNIQUE "
                     + ");";
 
-    public static void createNewDatabase ( ) {
-
-        try ( Connection conn = DriverManager.getConnection ( DATA_URL ) ) {
-            if ( conn != null ) {
-                createTables ( );
-                addPositions ( );
-            }
-        }
-        catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
-        }
-    }
-
     public static ObservableList<String> getPositions ( ) {
 
         ObservableList<String> result =
@@ -82,10 +73,23 @@ public class Database {
             }
         }
         catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
+            log.log ( Level.WARNING, "getPositions", e );
         }
 
         return result;
+    }
+
+    public static void createNewDatabase ( ) {
+
+        try ( Connection conn = DriverManager.getConnection ( DATA_URL ) ) {
+            if ( conn != null ) {
+                createTables ( );
+                addPositions ( );
+            }
+        }
+        catch ( SQLException e ) {
+            log.log ( Level.SEVERE, "createNewDatabase", e );
+        }
     }
 
     public static Integer getPositionId ( String value ) {
@@ -104,7 +108,7 @@ public class Database {
             }
         }
         catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
+            log.log ( Level.WARNING, "getPositionId", e );
         }
 
         return result;
@@ -139,7 +143,7 @@ public class Database {
             }
         }
         catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
+            log.log ( Level.WARNING, "getEmployees", e );
         }
 
         return result;
@@ -154,8 +158,8 @@ public class Database {
                                      Integer isSalaried,
                                      Double payRate ) {
 
-        String term = ( terminationDate == null ? null : new String ( "\"" +
-                terminationDate + "\"" ) );
+        String term = ( terminationDate == null ? null : "\"" +
+                terminationDate + "\"" );
 
         String cmd = "INSERT INTO employees\n"
                 + " VALUES ( \"" + fName + "\", \""
@@ -170,7 +174,7 @@ public class Database {
             stmt.execute ( cmd );
         }
         catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
+            log.log ( Level.WARNING, "addEmployee", e );
         }
     }
 
@@ -184,7 +188,7 @@ public class Database {
             stmt.execute ( positions );
         }
         catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
+            log.log ( Level.WARNING, "addPositions", e );
         }
 
     }
@@ -200,7 +204,7 @@ public class Database {
             stmt.execute ( POSITIONS );
         }
         catch ( SQLException e ) {
-            System.out.println ( e.getMessage ( ) );
+            log.log ( Level.SEVERE, "createTables", e );
         }
     }
 

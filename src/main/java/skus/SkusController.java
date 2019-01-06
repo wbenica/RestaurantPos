@@ -6,8 +6,10 @@ public class SkusController {
 
     public static GridPane getSceneEditSkus ( ) {
 
-        GridPane gp = new GridPane ( );
+        return new GridPane ( );
+    }
 
-        return gp;
+    private SkusController ( ) {
+
     }
 }
