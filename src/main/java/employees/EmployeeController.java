@@ -5,12 +5,14 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import sample.Main;
 
 import java.sql.Timestamp;
 import java.time.chrono.Chronology;
 
+// TODO: Check dates for correctness before attempting to insert in db
 public class EmployeeController {
 
     public static GridPane getSceneAddEmployee ( ) {
@@ -80,18 +82,26 @@ public class EmployeeController {
                     String hire = Timestamp.valueOf (
                             pickerHireDate.getValue ( ).atStartOfDay ( ) )
                             .toString ( );
-                    String termination = Timestamp.valueOf (
-                            pickerTerminationDate.getValue ( )
-                                    .atStartOfDay ( ) ).toString ( );
+                    String termination = null;
+                    if ( pickerTerminationDate.getValue ( ) != null ) {
+                        termination = Timestamp.valueOf (
+                                pickerTerminationDate.getValue ( )
+                                        .atStartOfDay ( ) ).toString ( );
+                    }
+
                     Integer salaried =
                             checkIsSalaried.isSelected ( ) ? 0 : 1;
                     Double pay =
                             Double.parseDouble ( textPayRate.getText ( ) );
-                    Database.addEmployee ( first, last, pos, hire, termination,
-                            salaried, pay );
+                    Database.addEmployee ( first, last, pos, hire,
+                            termination, salaried, pay );
                     textFirstName.clear ( );
                     textLastName.clear ( );
                     menuPosition.setValue ( null );
+                    pickerHireDate.setValue ( null );
+                    pickerTerminationDate.setValue ( null );
+                    checkIsSalaried.setSelected ( false );
+                    textPayRate.clear ( );
                 } );
         return gp;
     }
@@ -100,17 +110,27 @@ public class EmployeeController {
 
         VBox boop = new VBox ( );
 
+        Label labelCurrEmplOnly =
+                new Label ( "Current employees" );
+        ToggleButton toggleCurrEmplOnlyYes = new ToggleButton ( "Yes" );
+        ToggleButton toggleCurrEmplOnlyNo  = new ToggleButton ( "No" );
+        ToggleGroup  tgCurrEmpl            = new ToggleGroup ( );
+        tgCurrEmpl.getToggles ( ).addAll ( toggleCurrEmplOnlyNo,
+                toggleCurrEmplOnlyYes );
+
         Label title = new Label ( "Search Employee" );
         title.getStyleClass ( ).add ( Main.TITLE );
 
         TextField searchBar =
-                new TextField ( "Enter name or employee id" );
+                new TextField ( );
+        searchBar.setPromptText ( "Enter name, employee id, or position" );
+        searchBar.setFocusTraversable ( false );
         TableView<Employee> resultsTable = new TableView<> ( );
 
-        searchBar.setOnMouseClicked (
-                event -> searchBar.selectAll ( )
-        );
-
+//        searchBar.setOnMouseClicked (
+//                event -> searchBar.selectAll ( )
+//        );
+//
         searchBar.setOnKeyReleased (
                 event -> {
                     String val = searchBar.getText ( );
@@ -118,29 +138,47 @@ public class EmployeeController {
                 }
         );
 
-        TableColumn<Employee, Integer> idCol = new TableColumn<> (
-                "Emp ID" );
-        idCol.setCellValueFactory ( new PropertyValueFactory<> ( "id" ) );
+        TableColumn<Employee, Integer> colId = new TableColumn<> (
+                "ID" );
+        colId.setCellValueFactory ( new PropertyValueFactory<> ( "id" ) );
+        colId.setPrefWidth ( 50 );
 
-        TableColumn<Employee, String> firstCol = new TableColumn<> ( "First " +
-                "Name" );
-        firstCol.setCellValueFactory (
+        TableColumn<Employee, String> colFirstName =
+                new TableColumn<> ( "First " +
+                        "Name" );
+        colFirstName.setCellValueFactory (
                 new PropertyValueFactory<> ( "firstName" ) );
+        colFirstName.setPrefWidth ( 150 );
 
-        TableColumn<Employee, String> lastCol =
+        TableColumn<Employee, String> colLastName =
                 new TableColumn<> ( "Last Name" );
-        lastCol.setCellValueFactory (
+        colLastName.setCellValueFactory (
                 new PropertyValueFactory<> ( "lastName" ) );
+        colLastName.setPrefWidth ( 150 );
 
-        TableColumn<Employee, String> positionCol =
+        TableColumn<Employee, String> colPosition =
                 new TableColumn<> ( "Position" );
-        positionCol.setCellValueFactory (
+        colPosition.setCellValueFactory (
                 new PropertyValueFactory<> ( "position" ) );
+        colPosition.setPrefWidth ( 100 );
+
+        TableColumn<Employee, String> colHireDate =
+                new TableColumn<> ( "Hire Date" );
+        colHireDate.setCellValueFactory (
+                new PropertyValueFactory<> ( "hireDate" ) );
+        colHireDate.setPrefWidth ( 100 );
 
         resultsTable.getColumns ( )
-                .addAll ( idCol, firstCol, lastCol, positionCol );
+                .addAll ( colId, colFirstName, colLastName, colPosition,
+                        colHireDate );
 
-        boop.getChildren ( ).addAll ( title, searchBar, resultsTable );
+        HBox currEmplOnly = new HBox ( );
+        currEmplOnly.getChildren ( )
+                .addAll ( new Label ( "Current employees " +
+                                "only" ), toggleCurrEmplOnlyNo,
+                        toggleCurrEmplOnlyYes );
+        boop.getChildren ( ).addAll ( title, searchBar, currEmplOnly,
+                resultsTable );
 
         return boop;
     }

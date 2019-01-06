@@ -1,5 +1,10 @@
+.root {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
 .main {
-    -fx-background-color: white;
+    -fx-background-color: #FFFFF6;
 }
 
 .title {
@@ -10,15 +15,23 @@
     -fx-pref-width: infinity;
 }
 
-.label {
-    -fx-text-fill: darkslategray;
+/*.column-header,*/
+/*.table-view .table-cell {*/
+/*-fx-pref-width: 10em;*/
+/*}*/
+
+.toggle-button {
+    -fx-pref-width: 50;
 }
 
 .start {
+    -fx-text-fill: radial-gradient(center 50% 35%, radius 100%, #CD23C9, #0F1FFF);
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 0, 1), 2, 0, 5, 0);
     -fx-font-size: 300px;
     -fx-font-weight: bold;
     -fx-alignment: CENTER;
     -fx-pref-width: -1;
+    -fx-font-style: italic;
     -fx-text-alignment: CENTER;
     -fx-padding: 100px;
 }
@@ -28,6 +41,3 @@
     -fx-pref-width: 200;
 }
 
-.column-header {
-    -fx-background-color: #AAAAAA;
-}

@@ -24,7 +24,8 @@ public class Database {
                     + " last_name text NOT NULL,\n"
                     + " position integer NOT NULL,\n"
                     + " hire_date text NOT NULL,\n"
-                    + " termination_date text,\n"
+                    + " termination_date text CHECK ((termination_date >"
+                    + " hire_date) OR NULL),\n"
                     + " is_salaried integer NOT NULL CHECK (is_salaried IN"
                     + " (0, 1)),\n"
                     + " pay_rate real NOT NULL,\n"
@@ -153,11 +154,16 @@ public class Database {
                                      Integer isSalaried,
                                      Double payRate ) {
 
+        String term = ( terminationDate == null ? null : new String ( "\"" +
+                terminationDate + "\"" ) );
+
         String cmd = "INSERT INTO employees\n"
-                + " VALUES ( \"" + fName + "\", \"" + lName + "\", " +
-                pos +
-                ", \"" + hireDate + "\", \"" + terminationDate + "\", " +
-                isSalaried + ", " + payRate + " );";
+                + " VALUES ( \"" + fName + "\", \""
+                + lName + "\", "
+                + pos + ", \""
+                + hireDate + "\", "
+                + term
+                + ", " + isSalaried + ", " + payRate + " );";
 
         try ( Connection conn = DriverManager.getConnection ( DATA_URL );
               Statement stmt = conn.createStatement ( ) ) {

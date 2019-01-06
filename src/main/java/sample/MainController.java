@@ -20,7 +20,7 @@ public class MainController {
         VBox mainWindow = new VBox ( );
         mainWindow.getStyleClass ( ).add ( "main" );
         mainWindow.getChildren ( ).add ( getMenuBar ( mainWindow ) );
-        Label start = new Label ( "Welcome" );
+        Label start = new Label ( "Expo" );
         start.getStyleClass ( ).add ( "start" );
         mainWindow.getChildren ( ).add ( start );
 
